@@ -23,7 +23,7 @@ public class CreateData
             Console.WriteLine($"Rows affected: {rowsAffected}");
 
             // Retrieve the generated ID from the database
-            MySqlCommand selectCommand = new MySqlCommand(" SELECT UserID FROM User ;", connection);
+            MySqlCommand selectCommand = new MySqlCommand(" SELECT UserID FROM User ORDER BY UserID DESC LIMIT 1;", connection);
             object generatedId = selectCommand.ExecuteScalar();
             if (generatedId != null && generatedId != DBNull.Value)
             {

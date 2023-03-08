@@ -3,7 +3,6 @@ public class CreateData
 {
     public static void Create(MySqlConnection connection)
     {
-        string userId = Guid.NewGuid().ToString("ID"); // generate a new UUID for the UserID field
         Console.Write("Enter the FullName: ");
         string fullName = Console.ReadLine();
         Console.Write("Enter the Username: ");
@@ -11,9 +10,8 @@ public class CreateData
         Console.Write("Enter the Password: ");
         string password = Console.ReadLine();
 
-        string insertQuery = "INSERT INTO User (UserID, FullName, Username, Password) VALUES (@UserID, @FullName, @Username, @Password);";
+        string insertQuery = "INSERT INTO User (FullName, Username, Password) VALUES (@FullName, @Username, @Password);";
         MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection);
-        insertCommand.Parameters.AddWithValue("@UserID", userId);
         insertCommand.Parameters.AddWithValue("@FullName", fullName);
         insertCommand.Parameters.AddWithValue("@Username", username);
         insertCommand.Parameters.AddWithValue("@Password", password);
@@ -24,13 +22,18 @@ public class CreateData
             int rowsAffected = insertCommand.ExecuteNonQuery();
             Console.WriteLine($"Rows affected: {rowsAffected}");
 
-            // Retrieve the generated UUID from the database
-            string selectQuery = "SELECT UserID FROM User WHERE UserID = @UserID;";
-            MySqlCommand selectCommand = new MySqlCommand(selectQuery, connection);
-            selectCommand.Parameters.AddWithValue("@UserID", userId);
-
-            string selectedUserId = (string)selectCommand.ExecuteScalar();
-            Console.WriteLine($"Generated User ID: {selectedUserId}");
+            // Retrieve the generated ID from the database
+            MySqlCommand selectCommand = new MySqlCommand(" SELECT UserID FROM User ;", connection);
+            object generatedId = selectCommand.ExecuteScalar();
+            if (generatedId != null && generatedId != DBNull.Value)
+            {
+                string userId = generatedId.ToString();
+                Console.WriteLine($"Generated ID: {userId}");
+            }
+            else
+            {
+                Console.WriteLine("Failed to retrieve generated ID.");
+            }
         }
         catch (Exception ex)
         {

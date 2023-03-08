@@ -14,7 +14,8 @@
                 Console.Write("Enter a command (create, delete, get, list, exit): ");
                 string command = Console.ReadLine();
                 db.ProcessCommand(command);
-            }
+            Environment.Exit(0);
+        }
         }
     }
 

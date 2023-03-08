@@ -25,9 +25,6 @@ public class MySqlDatabase
             case "list":
                 ListData.List(connection);
                 break;
-            case "exit":
-                Environment.Exit(0);
-                break;
             default:
                 Console.WriteLine("Invalid command.");
                 break;
